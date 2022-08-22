@@ -61,6 +61,14 @@ resource "aws_security_group" "sgApp2" { // in the application layer
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress { 
+    description = "jenkins access"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
         to_port = 0
         from_port = 0
@@ -69,7 +77,7 @@ resource "aws_security_group" "sgApp2" { // in the application layer
    }
 }
 
-resource "aws_instance" "webserver" {
+resource "aws_instance" "jenkins-server" {
   ami                         = "ami-0015a39e4b7c0966f"
   instance_type               = "t2.micro"
   key_name                    = var.ssh_key
@@ -78,12 +86,23 @@ resource "aws_instance" "webserver" {
   associate_public_ip_address = true       
 
   tags = {
-    Name = "Larry's Machine"
+    Name = "${var.name}.tf.jenkins-server"
   }
 
   user_data = "${file("script.sh")}"
 }
 
-output "aws_ec2_ip" {
-  value = aws_instance.webserver.public_ip //logs the IP address of the EC2 
+resource "aws_instance" "ansible-machine" {
+  ami                         = var.ami_id
+  instance_type               = "t2.micro"
+  key_name                    = var.ssh_key
+  subnet_id                   =  aws_subnet.larry_subnet.id //related to the vpc   
+  vpc_security_group_ids       = [aws_security_group.sgApp2.id]   //reference it to the security group below
+  associate_public_ip_address = true       
+
+  tags = {
+    Name = "${var.name}.tf.ansible-machine"
+  }
+
+  user_data = "${file("script.sh")}"
 }
