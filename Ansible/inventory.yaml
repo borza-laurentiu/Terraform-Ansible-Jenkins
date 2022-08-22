@@ -1,0 +1,9 @@
+all:
+  children:
+    jenkins:
+      hosts:
+        <ip_address_jenkins_machine>:         #add the ip address of the jenkins machine
+  vars:
+    ansible_user: ubuntu
+    ansible_ssh_private_key_file: "~/.ssh/New-Key"   #update the path with path to the private key
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
