@@ -78,7 +78,7 @@ resource "aws_security_group" "sgApp2" { // in the application layer
 }
 
 resource "aws_instance" "jenkins-server" {
-  ami                         = "ami-0015a39e4b7c0966f"
+  ami                         = var.ami_id
   instance_type               = "t2.micro"
   key_name                    = var.ssh_key
   subnet_id                   =  aws_subnet.larry_subnet.id //related to the vpc   
