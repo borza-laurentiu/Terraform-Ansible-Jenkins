@@ -15,7 +15,7 @@
         update_cache: yes
       vars:
         packages:
-        - openjdk-8-jre
+        - openjdk-11-jre
         - curl
         - git
         - acl
